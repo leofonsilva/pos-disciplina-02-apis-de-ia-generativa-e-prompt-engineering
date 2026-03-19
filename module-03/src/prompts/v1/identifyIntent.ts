@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+// Schema que define o formato esperado para a resposta da IA ao identificar intenção
 export const IntentSchema = z.object({
   intent: z.enum(['schedule', 'cancel', 'unknown']).describe('The user intent'),
   professionalId: z.number().optional().describe('ID of the medical professional'),
@@ -11,12 +12,17 @@ export const IntentSchema = z.object({
 
 export type IntentData = z.infer<typeof IntentSchema>;
 
+// Gera o prompt de sistema com instruções detalhadas para a IA
 export const getSystemPrompt = (professionals: any[]) => {
   return JSON.stringify({
     role: 'Intent Classifier for Medical Appointments',
     task: 'Identify user intent and extract all appointment-related details',
+    
+    // Lista de profissionais disponíveis para matching
     professionals: professionals.map(p => ({ id: p.id, name: p.name, specialty: p.specialty })),
-    current_date: new Date().toISOString(),
+    current_date: new Date().toISOString(),  // Data atual para referência
+    
+    // Regras para cada tipo de intenção
     rules: {
       schedule: {
         description: 'User wants to book/schedule a new appointment',
@@ -34,6 +40,8 @@ export const getSystemPrompt = (professionals: any[]) => {
         examples: ['weather questions', 'general info', 'unrelated queries']
       }
     },
+    
+    // Instruções para extrair cada campo corretamente
     extraction_instructions: {
       professionalId: 'Match the professional name mentioned in the question to the ID from the professionals list. Use fuzzy matching.',
       professionalName: 'Extract the professional name as mentioned by the user',
@@ -41,6 +49,8 @@ export const getSystemPrompt = (professionals: any[]) => {
       patientName: 'Extract the patient name from the question or context',
       reason: 'Extract the reason/purpose for the appointment (only for scheduling)'
     },
+    
+    // Exemplos para guiar o comportamento da IA
     examples: [
       {
         input: 'I want to schedule with Dr. Alicio da Silva for tomorrow at 4pm for a check-up',
@@ -58,9 +68,10 @@ export const getSystemPrompt = (professionals: any[]) => {
   });
 };
 
+// Gera o prompt do usuário com a pergunta específica
 export const getUserPromptTemplate = (question: string) => {
   return JSON.stringify({
-    question,
+    question,  // Pergunta atual do usuário
     instructions: [
       'Carefully analyze the question to determine the user intent',
       'Extract all relevant appointment details',
