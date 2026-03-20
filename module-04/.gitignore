@@ -9,3 +9,7 @@ outputs/
 
 # LangGraph API
 .langgraph_api
+
+# Preferences
+preferences.db
+test-preferences.db

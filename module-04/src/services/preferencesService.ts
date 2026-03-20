@@ -4,11 +4,13 @@ import type { Knex } from 'knex';
 import type { ConversationSummary } from '../prompts/v1/summarization.ts';
 import type { UserPreferences } from '../prompts/v1/chatResponse.ts';
 
+// Serviço para gerenciar preferências de usuários em banco SQLite
 export class PreferencesService {
   private db: Knex;
   private isSetup = false;
 
   constructor(dbPath: string) {
+    // Conecta ao banco SQLite usando o caminho fornecido
     this.db = knex({
       client: 'better-sqlite3',
       connection: {
@@ -18,6 +20,7 @@ export class PreferencesService {
     });
   }
 
+  // Cria a tabela de preferências se não existir
   async setup(): Promise<void> {
     if (this.isSetup) return;
 
@@ -26,33 +29,37 @@ export class PreferencesService {
     if (!hasTable) {
       await this.db.schema.createTable('user_preferences', (table) => {
         table.increments('id').primary();
-        table.string('user_id').unique().notNullable();
-        table.string('name');
-        table.integer('age');
-        table.json('favorite_genres');
-        table.json('favorite_bands');
-        table.text('key_preferences');
-        table.text('important_context');
-        table.timestamp('updated_at').defaultTo(this.db.fn.now());
+        table.string('user_id').unique().notNullable();  // Identificador único do usuário
+        table.string('name');                            // Nome do usuário
+        table.integer('age');                            // Idade
+        table.json('favorite_genres');                   // Gêneros favoritos (array JSON)
+        table.json('favorite_bands');                    // Bandas favoritas (array JSON)
+        table.text('key_preferences');                   // Resumo das preferências
+        table.text('important_context');                 // Contexto importante extra
+        table.timestamp('updated_at').defaultTo(this.db.fn.now()); // Última atualização
       });
     }
 
     this.isSetup = true;
   }
 
+  // Mescla novas preferências com as existentes (evita duplicação)
   async mergePreferences(userId: string, prefs: UserPreferences): Promise<void> {
     await this.setup();
 
     const existing = await this.getSummary(userId);
 
+    // Combina gêneros novos com os existentes (sem duplicar)
     const mergedGenres = prefs.favoriteGenres?.length
       ? [...new Set([...(existing?.favoriteGenres || []), ...prefs.favoriteGenres])]
       : existing?.favoriteGenres;
 
+    // Combina bandas novas com as existentes (sem duplicar)
     const mergedBands = prefs.favoriteBands?.length
       ? [...new Set([...(existing?.favoriteBands || []), ...prefs.favoriteBands])]
       : existing?.favoriteBands;
 
+    // Constrói contexto a partir de informações adicionais
     const contextParts = [
       existing?.importantContext,
       prefs.mood && `Mood: ${prefs.mood}`,
@@ -71,12 +78,14 @@ export class PreferencesService {
       updated_at: this.db.fn.now(),
     };
 
+    // Insere ou atualiza se o user_id já existir
     await this.db('user_preferences')
       .insert(data)
       .onConflict('user_id')
       .merge();
   }
 
+  // Armazena um resumo completo da conversa
   async storeSummary(userId: string, summary: ConversationSummary): Promise<void> {
     await this.setup();
 
@@ -97,6 +106,7 @@ export class PreferencesService {
       .merge();
   }
 
+  // Recupera o resumo completo de um usuário
   async getSummary(userId: string): Promise<ConversationSummary | null> {
     await this.setup();
 
@@ -116,6 +126,7 @@ export class PreferencesService {
     };
   }
 
+  // Retorna informações básicas formatadas para usar no prompt
   async getBasicInfo(userId: string): Promise<string | undefined> {
     const summary = await this.getSummary(userId);
     if (!summary) return undefined;
@@ -137,6 +148,7 @@ export class PreferencesService {
     return parts.length > 0 ? parts.join('\n') : undefined;
   }
 
+  // Fecha a conexão com o banco de dados
   async close(): Promise<void> {
     await this.db.destroy();
   }

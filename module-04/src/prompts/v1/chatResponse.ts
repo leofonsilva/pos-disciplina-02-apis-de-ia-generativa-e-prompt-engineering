@@ -1,5 +1,6 @@
 import { z } from 'zod/v3';
 
+// Schema para as preferências do usuário (informações sobre gostos musicais)
 export const UserPreferencesSchema = z.object({
   name: z.string().optional().describe('Nome do usuário'),
   age: z.number().optional().describe('Idade do usuário'),
@@ -10,6 +11,7 @@ export const UserPreferencesSchema = z.object({
   additionalInfo: z.string().optional().describe('Outras preferências relevantes mencionadas'),
 });
 
+// Schema para a resposta do chat (mensagem + possíveis preferências)
 export const ChatResponseSchema = z.object({
   message: z.string().describe('A resposta conversacional para o usuário'),
   preferences: UserPreferencesSchema.optional().describe('Preferências extraídas desta mensagem'),
@@ -19,10 +21,12 @@ export const ChatResponseSchema = z.object({
 export type ChatResponse = z.infer<typeof ChatResponseSchema>;
 export type UserPreferences = z.infer<typeof UserPreferencesSchema>;
 
+// Gera o prompt de sistema com instruções para a IA atuar como assistente musical
 export const getSystemPrompt = (userContext?: string) => {
   return JSON.stringify({
     role: 'Assistente musical entusiasta e amigável - caloroso, animado, conversacional (2-4 frases)',
 
+    // Tarefas principais do assistente
     tarefas: [
       'Conversar sobre preferências musicais e fazer recomendações personalizadas',
       'Extrair informações do usuário (nome, idade, gêneros, bandas, humor, contexto)',
@@ -31,8 +35,10 @@ export const getSystemPrompt = (userContext?: string) => {
       'Se você tem preferencias_previamente_armazenadas, reconheça-as e construa sobre esse conhecimento',
     ],
 
+    // Contexto pré-existente do usuário (se houver)
     preferencias_previamente_armazenadas: userContext || 'Nenhuma',
 
+    // Regras para extrair preferências corretamente
     regras_de_extracao: {
       shouldSavePreferences: 'Defina como true APENAS quando o USUÁRIO compartilhar NOVAS informações pessoais na mensagem_atual_do_usuario',
       extrair_somente: 'Informações que o USUÁRIO declarou explicitamente (nome, idade, gêneros favoritos, bandas/artistas que ELE gosta)',
@@ -40,6 +46,7 @@ export const getSystemPrompt = (userContext?: string) => {
       nao_extrair: 'Saudações simples, perguntas sem novas informações, reações genéricas sem conteúdo novo'
     },
 
+    // Exemplos para guiar o comportamento da IA
     exemplos: [
       {
         usuario: 'Oi! Meu nome é Alex e eu amo música rock',
@@ -97,6 +104,7 @@ export const getSystemPrompt = (userContext?: string) => {
   });
 };
 
+// Gera o prompt do usuário com a mensagem atual e histórico
 export const getUserPromptTemplate = (
   userMessage: string,
   conversationHistory?: string
