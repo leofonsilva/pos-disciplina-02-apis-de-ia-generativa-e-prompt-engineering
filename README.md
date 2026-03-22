@@ -94,5 +94,29 @@ O projeto implementa um sistema completo de agendamento de consultas médicas vi
 **Aplicação prática:**
 O projeto implementa um sistema de recomendação de músicas que mantém memória conversacional entre interações. O sistema utiliza PostgreSQL para persistir checkpoints de estado (MemorySaver) e LibSQL como vector store para armazenar preferências de usuário de forma semanticamente searchable. A IA conduz uma conversa natural, extrai preferências musicais, salva-as no banco de dados, e usa essas informações para fazer recomendações personalizadas. Ao longo das conversas, uma sumarização é feita para reduzir o contexto. Demonstra padrões de produção para memória persistente, sessões isoladas, e arquitetura escalável com múltiplas camadas de armazenamento.
 
+### Módulo 05: Prompt Injection, Prompt Hijacking e Guardrails - Segurança Para Suas Aplicações de IA Integrada
+**Projeto:** [Guardrails & Prompt Injection](module-05)
+
+**Tecnologias utilizadas:**
+- **LangChain** - Framework para construção de aplicações com LLMs
+- **LangGraph** - Biblioteca para criação de grafos de estados com agentes
+- **OpenRouter SDK** - SDK para acesso unificado a múltiplos modelos de IA
+- **MCP (Model Context Protocol)** - Protocolo para ferramentas externas
+- **Zod** - Validação de schemas TypeScript
+- **TypeScript** - Linguagem tipada para desenvolvimento robusto
+
+**Conceitos abordados:**
+- Prompt injection attacks e bypass de segurança
+- Guardrails baseados em LLM para detecção de injeção
+- Role-based access control (RBAC)
+- Arquitetura de segurança fail-closed
+- Fluxo condicional com LangGraph
+- Template strings seguras vs substituição direta
+- Testes de segurança e demonstrações práticas
+- MCP para ferramentas externas (sistema de arquivos)
+
+**Aplicação prática:**
+O projeto implementa uma demonstração educacional de segurança contra prompt injection. Utiliza um sistema de guardrails baseado em LLM que analisa mensagens do usuário antes de chegar ao modelo principal. O sistema distingue entre usuários admin (com permissões) e membros (sem permissões), bloqueando tentativas de bypass de segurança como "ignore previous instructions" ou "act as admin". Demonstra que prompt instructions sozinhas são insuficientes e que arquiteturas de segurança fail-closed são essenciais para aplicações de IA em produção.
+
 ## Resumo das Tecnologias
 Pendente...

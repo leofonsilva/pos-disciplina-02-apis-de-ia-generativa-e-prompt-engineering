@@ -1,22 +1,18 @@
 import type { GraphState } from '../state.ts';
 
-/**
- * Route after guardrails check
- * - If guardrails disabled, go to chat
- * - If guardrails enabled and safe, go to chat
- * - If guardrails enabled and unsafe, go to blocked
- */
+// Decide o próximo nó após a verificação de segurança (guardrails)
 export function routeAfterGuardrails(state: GraphState): 'chat' | 'blocked' {
-  // If guardrails disabled, go straight to chat
+  // Caso 1: Guardrails desabilitados - segue direto para o chat
   if (!state.guardrailsEnabled) {
     return 'chat';
   }
 
-  // If guardrails enabled, check result
+  // Caso 2: Guardrails habilitados e mensagem segura - vai para o chat
   const check = state.guardrailCheck;
   if (!check || check.safe) {
     return 'chat';
   }
 
+  // Caso 3: Guardrails habilitados e mensagem insegura - bloqueia
   return 'blocked';
 }

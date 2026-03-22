@@ -6,32 +6,37 @@ import { blockedNode } from './nodes/blockedNode.ts';
 import { routeAfterGuardrails } from './nodes/edgeConditions.ts';
 import { OpenRouterService } from '../services/openrouterService.ts';
 
+// Constrói o grafo de chat com sistema de segurança (guardrails)
 export function buildChatGraph() {
+  // Cria o cliente OpenRouter para chamadas à IA
+  const service = new OpenRouterService();
 
-    const service = new OpenRouterService();
-    const workflow = new StateGraph({
-        stateSchema: SafeguardStateAnnotation
-    })
-        .addNode('guardrails_check', createGuardrailsCheckNode(service))
-        .addNode('chat', createChatNode(service))
-        .addNode('blocked', blockedNode)
+  // Cria o grafo com o schema de estado que inclui campos de segurança
+  const workflow = new StateGraph({
+    stateSchema: SafeguardStateAnnotation
+  })
+    // Adiciona os nós do grafo
+    .addNode('guardrails_check', createGuardrailsCheckNode(service))  // Verifica segurança da mensagem
+    .addNode('chat', createChatNode(service))                         // Gera resposta da IA
+    .addNode('blocked', blockedNode)                                  // Retorna mensagem de bloqueio
 
-        // Set entry point
-        .addEdge(START, 'guardrails_check')
+    // Ponto de entrada: sempre começa verificando a segurança
+    .addEdge(START, 'guardrails_check')
 
-        // Define conditional edge after guardrails check
-        .addConditionalEdges(
-            'guardrails_check',
-            (state: GraphState) => routeAfterGuardrails(state),
-            {
-                chat: 'chat',
-                blocked: 'blocked',
-            }
-        )
+    // Roteamento condicional após a verificação de segurança
+    .addConditionalEdges(
+      'guardrails_check',
+      (state: GraphState) => routeAfterGuardrails(state),  // Decide para onde ir
+      {
+        chat: 'chat',       // Se segura → vai para chat
+        blocked: 'blocked', // Se insegura → vai para blocked
+      }
+    )
 
-        // Both chat and blocked nodes end the flow
-        .addEdge('chat', END)
-        .addEdge('blocked', END);
+    // Ambos os nós finais encerram o fluxo
+    .addEdge('chat', END)     // Após resposta, finaliza
+    .addEdge('blocked', END); // Após bloqueio, finaliza
 
-    return workflow.compile();
+  // Compila e retorna o grafo pronto para execução
+  return workflow.compile();
 }
