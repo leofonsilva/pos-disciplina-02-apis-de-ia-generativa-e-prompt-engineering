@@ -118,5 +118,33 @@ O projeto implementa um sistema de recomendação de músicas que mantém memór
 **Aplicação prática:**
 O projeto implementa uma demonstração educacional de segurança contra prompt injection. Utiliza um sistema de guardrails baseado em LLM que analisa mensagens do usuário antes de chegar ao modelo principal. O sistema distingue entre usuários admin (com permissões) e membros (sem permissões), bloqueando tentativas de bypass de segurança como "ignore previous instructions" ou "act as admin". Demonstra que prompt instructions sozinhas são insuficientes e que arquiteturas de segurança fail-closed são essenciais para aplicações de IA em produção.
 
+### Módulo 06: RAG Avançado na Prática
+
+**Projeto:** [RAG Neo4j Students](module-06)
+
+**Tecnologias utilizadas:**
+
+* **LangChain** - Orquestração de LLMs e structured output
+* **LangGraph** - Execução de fluxos multi-step com controle de estado
+* **Neo4j** - Banco de dados orientado a grafos para consultas relacionais
+* **OpenRouter SDK** - Acesso a múltiplos modelos de linguagem
+* **Zod** - Validação de schemas e tipagem do estado
+* **Fastify** - Servidor HTTP performático
+* **TypeScript** - Tipagem estática e organização do código
+
+**Conceitos abordados:**
+- Arquitetura RAG (Retrieval-Augmented Generation) com banco de grafos
+- Geração automática de queries Cypher via LLM
+- Execução e validação de queries no Neo4j
+- Self-healing pipeline com correção automática de queries
+- Decomposição de perguntas complexas (multi-step reasoning)
+- Orquestração de fluxo com LangGraph (State Machine)
+- Structured output com validação via Zod
+- Tratamento de erros e fallback em pipelines de IA
+- Problemas de determinismo em LLMs e impacto em testes E2E
+
+**Aplicação prática:**
+O projeto implementa um sistema de analytics sobre dados de vendas utilizando Neo4j como fonte de verdade. Perguntas em linguagem natural são convertidas em queries Cypher por um LLM, executadas no banco e transformadas em respostas analíticas. O fluxo utiliza LangGraph para orquestrar etapas como extração da pergunta, planejamento, geração de query, execução, correção automática em caso de erro e síntese final da resposta. Suporta queries simples e multi-step, permitindo análises mais complexas como co-enrollment de cursos e distribuição de receita. Também evidencia desafios reais de aplicações com LLM, como instabilidade, necessidade de validação e tratamento de respostas não determinísticas.
+
 ## Resumo das Tecnologias
 Pendente...

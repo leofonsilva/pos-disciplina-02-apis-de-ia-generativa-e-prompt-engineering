@@ -1,3 +1,5 @@
+// Contexto de negócios para o sistema de análise de vendas
+// Este texto é usado nos prompts para guiar a IA na geração de queries Cypher
 export const SALES_CONTEXT = `
 ## Business Rules - Online Academy Sales Analytics
 

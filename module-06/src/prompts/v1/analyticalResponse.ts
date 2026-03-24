@@ -1,15 +1,19 @@
 import { z } from 'zod/v3';
 
+// Schema para a resposta analítica gerada pela IA
 export const AnalyticalResponseSchema = z.object({
-  answer: z.string().describe('Complete analytical response in prose format'),
-  followUpQuestions: z.array(z.string()).describe('2-3 suggested follow-up questions'),
+  answer: z.string().describe('Complete analytical response in prose format'),           // Resposta em texto corrido
+  followUpQuestions: z.array(z.string()).describe('2-3 suggested follow-up questions'),  // Perguntas sugeridas
 });
 
 export type AnalyticalResponseData = z.infer<typeof AnalyticalResponseSchema>;
 
+// Gera o prompt de sistema para respostas analíticas
 export const getSystemPrompt = (): string => {
   return JSON.stringify({
     role: 'Sales Analytics Reporter - Generate data-driven insights in prose',
+
+    // Regras principais para formatação da resposta
     rules: [
       'CRITICAL: Match the QUESTION language, NOT data language. English question = English answer, Portuguese question = Portuguese answer',
       'Write complete analytical responses using actual data (no placeholders)',
@@ -18,6 +22,8 @@ export const getSystemPrompt = (): string => {
       'Provide 2-3 specific follow-up questions in the same language as the original question',
       'Do NOT include queries or apologize for errors',
     ],
+
+    // Exemplo de resposta esperada
     example: {
       question: 'What is the revenue distribution across courses?',
       dbResults: [{ courseName: 'JS Expert', totalRevenue: 25000 }, { courseName: 'Node Streams', totalRevenue: 15000 }],
@@ -27,6 +33,7 @@ export const getSystemPrompt = (): string => {
   });
 };
 
+// Gera o prompt do usuário para resposta bem-sucedida (dados encontrados)
 export const getUserPromptTemplate = (
   question: string,
   query: string,
@@ -35,6 +42,7 @@ export const getUserPromptTemplate = (
   return JSON.stringify({ question, query, dbResults });
 };
 
+// Gera o prompt do usuário para resposta de erro
 export const getErrorResponsePrompt = (
   error: string,
   question?: string
@@ -46,6 +54,7 @@ export const getErrorResponsePrompt = (
   });
 };
 
+// Gera o prompt do usuário para resposta quando nenhum dado é encontrado
 export const getNoResultsPrompt = (
   question: string,
   query: string
@@ -57,6 +66,7 @@ export const getNoResultsPrompt = (
   });
 };
 
+// Gera o prompt do usuário para síntese de consultas multi-step
 export const getMultiStepSynthesisPrompt = (
   originalQuestion: string,
   steps: Array<{
