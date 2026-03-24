@@ -146,5 +146,33 @@ O projeto implementa uma demonstração educacional de segurança contra prompt 
 **Aplicação prática:**
 O projeto implementa um sistema de analytics sobre dados de vendas utilizando Neo4j como fonte de verdade. Perguntas em linguagem natural são convertidas em queries Cypher por um LLM, executadas no banco e transformadas em respostas analíticas. O fluxo utiliza LangGraph para orquestrar etapas como extração da pergunta, planejamento, geração de query, execução, correção automática em caso de erro e síntese final da resposta. Suporta queries simples e multi-step, permitindo análises mais complexas como co-enrollment de cursos e distribuição de receita. Também evidencia desafios reais de aplicações com LLM, como instabilidade, necessidade de validação e tratamento de respostas não determinísticas.
 
+### Módulo 07: Pipeline de QA com Documentos e LLM Multimodal
+**Projeto:** [Document Q&A Pipeline](module-07)
+
+**Tecnologias utilizadas:**
+- **Fastify** - Framework web rápido e de baixo overhead para Node.js
+- **LangChain** - Framework para construção de aplicações com LLMs
+- **LangGraph** - Biblioteca para criação de grafos de estados com agentes
+- **OpenRouter SDK** - SDK para acesso unificado a múltiplos modelos de IA
+- **Zod** - Validação de schemas TypeScript
+- **TypeScript** - Linguagem tipada para desenvolvimento robusto
+- **Form-data** - Manipulação de uploads de arquivos
+- **Multipart** - Suporte a uploads de documentos
+
+**Conceitos abordados:**
+- Pipeline de QA com documentos (PDF, imagens)
+- Modelo multimodal para análise de documentos
+- Roteamento inteligente entre modelos de IA
+- Validação de schemas com Zod
+- Arquitetura de fluxo linear com LangGraph
+- Tratamento de erros e fallback
+- Integração com OpenRouter para modelos multimodais
+- Upload de documentos via API
+- Geração de respostas baseadas no conteúdo do documento
+- Testes automáticos com documentos de exemplo
+
+**Aplicação prática:**
+O projeto implementa um servidor HTTP com uma rota `/chat` que aceita uploads de documentos (PDF, imagens) e perguntas sobre seu conteúdo. O sistema utiliza um modelo multimodal para analisar o documento e gerar respostas contextuais. Demonstra a criação de um pipeline de QA com documentos, incluindo: (1) upload de arquivo; (2) análise multimodal; (3) geração de resposta; (4) tratamento de erros. O fluxo é linear e simples, mas demonstra conceitos importantes de integração com LLMs multimodais e processamento de documentos.
+
 ## Resumo das Tecnologias
 Pendente...
