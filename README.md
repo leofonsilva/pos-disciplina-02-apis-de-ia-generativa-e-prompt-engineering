@@ -1,7 +1,9 @@
 # Pós Disciplina 02 – APIs de IA Generativa e Prompt Engineering
 
 ## Introdução
-Pendente...
+Este repositório contém todos os projetos desenvolvidos durante a disciplina **APIs de IA Generativa e Prompt Engineering**, abordando desde conceitos básicos de integração com LLMs até técnicas avançadas de engenharia de prompts, arquiteturas de segurança e sistemas de memória conversacional.
+
+Cada projeto foi desenvolvido para demonstrar na prática as tecnologias e conceitos teóricos abordados nos módulos, utilizando JavaScript/TypeScript como linguagem principal e explorando tanto modelos open-source quanto proprietários.
 
 ## Módulos
 
@@ -175,4 +177,25 @@ O projeto implementa um sistema de analytics sobre dados de vendas utilizando Ne
 O projeto implementa um servidor HTTP com uma rota `/chat` que aceita uploads de documentos (PDF, imagens) e perguntas sobre seu conteúdo. O sistema utiliza um modelo multimodal para analisar o documento e gerar respostas contextuais. Demonstra a criação de um pipeline de QA com documentos, incluindo: (1) upload de arquivo; (2) análise multimodal; (3) geração de resposta; (4) tratamento de erros. O fluxo é linear e simples, mas demonstra conceitos importantes de integração com LLMs multimodais e processamento de documentos.
 
 ## Resumo das Tecnologias
-Pendente...
+
+### Web Development
+- **Fastify** - Framework web rápido e de baixo overhead para Node.js
+- **TypeScript** - Linguagem tipada para desenvolvimento robusto
+
+### IA e LLMs
+- **LangChain** - Framework para construção de aplicações com LLMs
+- **LangGraph** - Biblioteca para criação de grafos de estados com agentes
+- **OpenRouter SDK** - SDK para acesso unificado a múltiplos modelos de IA
+- **Model Context Protocol (MCP)** - Protocolo para ferramentas externas
+
+### Bancos de Dados
+- **PostgreSQL** - Banco de dados relacional para persistência de memória
+- **LibSQL** - Banco de dados SQLite com suporte a vetores para preferências
+- **Neo4j** - Banco de dados orientado a grafos para consultas relacionais
+
+### Validação e Tipagem
+- **Zod** - Validação de schemas TypeScript
+
+### Upload e Processamento de Arquivos
+- **Form-data** - Manipulação de uploads de arquivos
+- **Multipart** - Suporte a uploads de documentos
